@@ -75,5 +75,13 @@ RUN rm -rf /usr/src/nginx-$NGINX_VERSION && \
     rm -f /nginx.tar.gz
 WORKDIR /
 
+ENV BUILD_DEPS="gettext"  \
+    RUNTIME_DEPS="libintl"
+
+RUN apk add --update $RUNTIME_DEPS && \
+    apk add --virtual build_deps $BUILD_DEPS &&  \
+    cp /usr/bin/envsubst /usr/local/bin/envsubst && \
+    apk del build_deps
+
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
